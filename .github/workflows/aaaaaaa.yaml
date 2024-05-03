@@ -11,3 +11,10 @@ jobs:
       - name: "Print issue details"
         run: |
           echo '${{ toJson(github.event.issue) }}'
+      - name: "Print some variables"
+        run: |
+          echo '${{ vars.TESTE_VAR }}'
+          echo '${{ variables.TESTE_VAR }}'
+          echo '${{ secrets.TESTE_VAR }}'
+          echo '${{ env.TESTE_VAR }}'
+
