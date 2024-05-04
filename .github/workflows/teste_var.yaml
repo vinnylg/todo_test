@@ -1,0 +1,14 @@
+name: "Executar meu script (manual)"
+on:
+  workflow_dispatch: # Triggered manually
+
+jobs:
+  meu_script:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+      - name: "Print issue details (Replace with your actual issue data)"
+        run: |
+          echo  "list ${{ vars.CLICKUP_LIST_ID }}",
+          echo  "list ${{ vars.CLICKUP_ASSIGNESS_LIST }}",
+
