@@ -24,7 +24,7 @@ jobs:
 
           issue = json.loads(os.getenv('ISSUE'))
 
-          print('Closing Task in ClickUp')
+          print('Closing Task in ClickUp)
 
           ## GET COMMENTS IN ISSUE
 
@@ -33,9 +33,9 @@ jobs:
             'Accept': 'application/vnd.github.v3+json'
           }
 
-          issue_list_comment_response = requests.get(issue['comments_url'], headers=github_headers)
+          issue_comment_response = requests.get(issue['comments_url'], headers=github_headers)
 
-          print(issue_list_comment_response.json())
+          print(json.dumps(issue_comment_response.json(), indent=4))
 
           if sucess(issue_comment_response.status_code):
             print('Comment posted successfully in Issue')
@@ -62,7 +62,6 @@ jobs:
           #   print('Task closed successfully!')
           # else:
           #   raise Exception('Error closing task in ClickUp:', task_response.text)
-
           "
         env:
           ISSUE: ${{ toJson(github.event.issue) }}
