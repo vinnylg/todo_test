@@ -18,6 +18,7 @@ jobs:
           import requests
           import json
           import os
+          import re
 
           # lambdas
           get_priority = lambda tags: 1 if 'urgent' in tags else 2 if 'high' in tags else 3 if 'normal' in tags else 4
