@@ -35,13 +35,14 @@ jobs:
 
           issue_comment_response = requests.get(issue['comments_url'], headers=github_headers)
 
-          print(json.dumps(issue_comment_response.json(), indent=4))
-
           if sucess(issue_comment_response.status_code):
             print('Comment posted successfully in Issue')
           else:
             raise Exception('Failed to post comment:', issue_comment_response.content)
 
+          comments = sorted(issue_comment_response.json(), key=lambda x: x['created_at'])
+          first_comment = comments[0]['body']
+          print(first_comment)
 
           ## UPDATE TASK
 
