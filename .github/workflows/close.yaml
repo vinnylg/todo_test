@@ -1,7 +1,7 @@
 name: "Close ClickUp Task from Issue"
 on:
   issues:
-    types: [closed]
+    types: [closed, deleted]
 jobs:
   meu_script:
     runs-on: "ubuntu-latest"
