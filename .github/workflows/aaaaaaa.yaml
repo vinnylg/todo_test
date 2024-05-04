@@ -10,7 +10,7 @@ jobs:
       - uses: "actions/checkout@v4"
       - name: "Print issue details"
         run: |
-          echo '${{ toJson(github.event.issue) }}'
+          echo "Teste de string"
       # - name: "Print custom JSON"
       #   run: |
       #     JSON_STRING='{
