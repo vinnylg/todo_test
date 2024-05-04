@@ -37,7 +37,7 @@ jobs:
 
           # URL da API para listar issues abertas
           issues_url = f'https://api.github.com/repos/{owner}/{repo}/issues?state=open'
-          issues_response = requests.get(issues_url, headers=headers)
+          issues_response = requests.get(issues_url, headers=github_headers)
 
           if sucess(issues_response.status_code):
             print('Get Issue List successfully')
