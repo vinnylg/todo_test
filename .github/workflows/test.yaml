@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -20,6 +20,28 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
+          python -c"
           import os
+          import requests
 
-          print(os.getenv('GITHUB_REPOSITORY'))
+          # Autenticar usando o token de acesso pessoal
+          headers = {
+              'Authorization': f'token {os.getenv("GITHUB_TOKEN")}',
+              'Accept': 'application/vnd.github.v3+json'
+          }
+
+          # Obter o nome do repositório
+          owner, repo = os.getenv('GITHUB_REPOSITORY').split('/')
+
+          # URL da API para listar issues abertas
+          url = f'https://api.github.com/repos/{owner}/{repo}/issues?state=open'
+
+          # Fazer a requisição GET para obter as issues
+          response = requests.get(url, headers=headers)
+          if response.status_code == 200:
+              issues = response.json()
+              for issue in issues:
+                  print(issue['title'])
+          else:
+              print('Erro ao obter as issues:', response.text)
+          "
