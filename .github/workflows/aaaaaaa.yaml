@@ -27,7 +27,7 @@ jobs:
 
           clickup_headers = {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer %s' % secrets.CLICKUP_TOKEN
+              'Authorization': 'Bearer %s' % 'pk_84824417_GG9URN060Q75S9IBK46A8Y7KLQPAT9X3' # os.getenv('CLICKUP_TOKEN')
           }
 
           print(clickup_headers)
@@ -75,7 +75,7 @@ jobs:
 
 
             headers = {
-              'Authorization': 'token %s' % secrets.GITHUB_TOKEN,
+              'Authorization': 'token %s' % os.getenv('GITHUB_TOKEN'),
               'Accept': 'application/vnd.github.v3+json'
             }
 
@@ -96,5 +96,6 @@ jobs:
           "
         env:
           ISSUE: ${{ toJson(github.event.issue) }}
+          CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
           CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
           CLICKUP_ASSIGNESS_LIST: ${{ vars.CLICKUP_ASSIGNESS_LIST }}
