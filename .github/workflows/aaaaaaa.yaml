@@ -14,22 +14,22 @@ jobs:
       - name: "Print custom JSON"
         run: |
           python -c "
-import json
-import os
-
-data = {
-  'list': os.getenv('CLICKUP_LIST_ID'),
-  'name': f'{os.getenv('ISSUE_TITLE')} #{os.getenv('ISSUE_NUMBER')}',
-  'markdown_description': os.getenv('ISSUE_BODY'),
-  'tags': json.loads(os.getenv('ISSUE_LABELS')),
-  'status': 'Open',
-  'notify_all': True,
-  'priority': 3,
-  'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
-}
-
-print(json.dumps(data, indent=2))
-"
+          import json
+          import os
+          
+          data = {
+            'list': os.getenv('CLICKUP_LIST_ID'),
+            'name': f'{os.getenv('ISSUE_TITLE')} #{os.getenv('ISSUE_NUMBER')}',
+            'markdown_description': os.getenv('ISSUE_BODY'),
+            'tags': json.loads(os.getenv('ISSUE_LABELS')),
+            'status': 'Open',
+            'notify_all': True,
+            'priority': 3,
+            'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
+          }
+          
+          print(json.dumps(data, indent=2))
+          "
             
         env:
           CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
