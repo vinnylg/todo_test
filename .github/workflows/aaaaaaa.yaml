@@ -18,85 +18,98 @@ jobs:
           import requests
           import json
           import os
-
+          
           issue = json.loads(os.getenv('ISSUE'))
-
+          
           print('Creating Task in ClickUp from GitHub Issue #%d' % issue['number'])
-
+          
           clickup_task_url = 'https://api.clickup.com/api/v2/list/%s/task' % os.getenv('CLICKUP_LIST_ID')
-
+          
           clickup_headers = {
               'Content-Type': 'application/json',
               'Authorization': os.getenv('CLICKUP_TOKEN')
           }
-
-          print(clickup_headers)
-
+          
           tags = [label['name'].lower() for label in issue['labels']]
           priorities = ['urgent', 'high', 'normal', 'low']
-
+          filter_tags = [tag for tag in tags if tag not in priorities]
+          
           get_priority = lambda tags: 1 if 'urgent' in tags else 2 if 'high' in tags else 3 if 'normal' in tags else 4
-
+          
           task_data = {
             'list': os.getenv('CLICKUP_LIST_ID'),
             'name': '#%d %s' % (issue['number'],issue['title']),
             'markdown_description': issue['body'],
-            'tags': [tag for tag in tags if tag not in priorities],
+            'tags': filter_tags,
             'priority': get_priority(tags),
             'status': 'Open',
             'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
           }
-
-          response = requests.post(clickup_task_url, headers=clickup_headers, json=task_data)
-
-          if response.status_code == 200:
-            response_json = response.json()
-            task_id = response_json['id']
-            task_url = response_json['url']
-
-            print('Task created successfully! ID:', task_id)
-
-            clickup_comment_url = 'https://api.clickup.com/api/v2/task/%s/comment' % task_id
-
-            clickup_comment_data = {
-              'comment': [
-                  {
-                      'type': 'bookmark',
-                      'bookmark': {
-                          'url': issue['html_url'],
-                          'service': 'github'
-                      }
-                  }
-              ]
-            }
-
-            response = requests.post(clickup_comment_url, headers=clickup_headers, json=clickup_comment_data)
-
-            if response.status_code == 200:
-                print('Comment added to ClickUp Task #%s successfully!' % (task_id))
-            else:
-                print('Error adding comment in ClickUp Task:', response.text)
-
-
-            headers = {
-              'Authorization': 'token %s' % os.getenv('GITHUB_TOKEN'),
-              'Accept': 'application/vnd.github.v3+json'
-            }
-
-            issue_comment_data = {
-              'body': '[#%s](%s)' % (task_id,task_url)
-            }
-
-            response = requests.post(issue['comments_url'], headers=headers, json=issue_comment_data)
-
-            if response.status_code == 201:
-              print('Comment posted successfully in Issue %d!' % issue['number'])
-            else:
-              print('Failed to post comment:', response.content)
-
-
+          
+          ## CREATE TASK
+          task_response = requests.post(clickup_task_url, headers=clickup_headers, json=task_data)
+          
+          if task_response.status_code == requests.codes.ok:
+            print('Task created successfully! ID:')
           else:
-            raise Exception('Error creating task in ClickUp:', response.text)
+            raise Exception('Error creating task in ClickUp:', task_response.text)
+          
+          response_json = task_response.json()
+          task_id = task_response_json['id']
+          task_url = task_response_json['url']
+          
+          clickup_comment_url = 'https://api.clickup.com/api/v2/task/%s/comment' % task_id
+          
+          clickup_comment_data = {
+            'comment': [
+                {
+                    'type': 'bookmark',
+                    'bookmark': {
+                        'url': issue['html_url'],
+                        'service': 'github'
+                    }
+                }
+            ]
+          }
+          
+          ## CREATE COMMENT IN TASK
+          clickup_comment_response = requests.post(clickup_comment_url, headers=clickup_headers, json=clickup_comment_data)
+          
+          if clickup_comment_response.status_code == requests.codes.ok:
+              print('Comment added to ClickUp Task successfully!')
+          else:
+              raise Exception('Error adding comment in ClickUp Task:', clickup_comment_response.text)
+          
+          
+          github_headers = {
+            'Authorization': 'token %s' % os.getenv('GITHUB_TOKEN'),
+            'Accept': 'application/vnd.github.v3+json'
+          }
+          
+          issue_labels_update = {
+            'labels': filter_tags + [ priorities[get_priority(tags) - 1] ]
+          }
+          
+          ## UPDATE LABELS IN ISSUE
+          issue_update_response = requests.put(issue['url'], headers=github_headers, json=issue_labels_update)
+          
+          if issue_update_response.status_code == requests.codes.ok:
+            print('Update Issue %d successfully!')
+          else:
+            raise Exception('Failed to post comment:', issue_update_response.content)
+          
+          
+          issue_comment_data = {
+            'body': '[#%s](%s)' % (task_id,task_url)
+          }
+          
+          ## CREATE COMMENT IN ISSUE
+          issue_comment_response = requests.post(issue['comments_url'], headers=github_headers, json=issue_comment_data)
+          
+          if issue_comment_response.status_code == requests.codes.ok:
+            print('Comment posted successfully in Issue')
+          else:
+            raise Exception('Failed to post comment:', issue_comment_response.content)          
           "
         env:
           ISSUE: ${{ toJson(github.event.issue) }}
