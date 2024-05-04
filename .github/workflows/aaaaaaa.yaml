@@ -10,8 +10,8 @@ jobs:
       - name: "Print secrets and vars"
         run: |
           echo "${{ secrets.CLICKUP_TOKEN }}"
-          echo "${{ vars.CLICKUP_LIST_ID }}"
-          echo "${{ vars.CLICKUP_ASSIGNESS_LIST }}"
+          echo "${{ env.CLICKUP_LIST_ID }}"
+          echo "${{ env.CLICKUP_ASSIGNESS_LIST }}"
       - name: "Print custom JSON"
         run: |
           echo "{
