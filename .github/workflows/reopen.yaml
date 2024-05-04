@@ -1,0 +1,85 @@
+name: "Reopen ClickUp Task from Issue"
+on:
+  issues:
+    types: [reopened]
+jobs:
+  meu_script:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+      - name: "Setup Python"
+        uses: "actions/setup-python@v2"
+        with:
+          python-version: "3.x"
+      - name: "Reopen Click Task"
+        run: |
+          pip install requests
+          python -c "
+          import requests
+          import json
+          import os
+          import re
+
+          # lambdas
+          sucess = lambda code: 200 <= code < 300
+
+          issue = json.loads(os.getenv('ISSUE'))
+
+          print('Reopen Task in ClickUp')
+
+          ## GET COMMENTS IN ISSUE
+
+          github_headers = {
+            'Authorization': 'token %s' % os.getenv('GITHUB_TOKEN'),
+            'Accept': 'application/vnd.github.v3+json'
+          }
+
+          issue_comment_response = requests.get(issue['comments_url'], headers=github_headers)
+
+          if sucess(issue_comment_response.status_code):
+            print('Get Issue Comments successfully')
+          else:
+            raise Exception('Failed to get comments:', issue_comment_response.content)
+          
+          
+          comments = sorted(issue_comment_response.json(), key=lambda x: x['created_at'])
+          if len(comments):
+            first_comment = comments[0]['body']
+            re_task_id = re.search(r'\[#(\w+)\]', first_comment)
+
+            if re_task_id:
+              task_id = re_task_id.group(1)
+            else:
+              print('Not has ClickUp Task')
+              exit(0)
+            
+          else:
+            print('Not has comments')
+            exit(0)
+
+          ## UPDATE TASK
+
+          clickup_task_url = 'https://api.clickup.com/api/v2/task/%s' % task_id
+          
+          print(clickup_task_url)
+
+          clickup_headers = {
+              'Content-Type': 'application/json',
+              'Authorization': os.getenv('CLICKUP_TOKEN')
+          }
+
+          task_data = {
+            'status': 'Open'
+          }
+
+          task_response = requests.put(clickup_task_url, headers=clickup_headers, json=task_data)
+
+          if sucess(task_response.status_code):
+            print('Task closed successfully!')
+          else:
+            raise Exception('Error closing task in ClickUp:', task_response.text)
+          "
+        env:
+          ISSUE: ${{ toJson(github.event.issue) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
