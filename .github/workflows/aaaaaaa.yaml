@@ -30,6 +30,8 @@ jobs:
               'Authorization': 'Bearer %s' % os.getenv('CLICKUP_TOKEN')
           }
 
+          print(clickup_headers)
+
           tags = [label['name'].lower() for label in issue['labels']]
           priorities = ['urgent', 'high', 'normal', 'low']
 
