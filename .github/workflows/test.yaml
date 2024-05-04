@@ -44,8 +44,8 @@ jobs:
           else:
             raise Exception('Error to get Issue list:', issues_response.text)
 
-
-
+          issues = issues_response.json()
+          
           for issue in issues:
             print('Check if Issue has Task ID')
 
