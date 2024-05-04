@@ -19,6 +19,9 @@ jobs:
 
           tags = map(lambda x: x.lower(),json.loads(os.getenv('ISSUE_LABELS')))
           priority = [ 'urgent', 'high', 'normal', 'low' ]
+
+          for tag in tags:
+            print(tag)
           
           data = {
             'list': os.getenv('CLICKUP_LIST_ID'),
@@ -31,9 +34,9 @@ jobs:
             'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
           }
           
-          print(json.dumps(data, indent=2))
+          # print(json.dumps(data, indent=2))
 
-          print(os.getenv('A'))
+          # print(os.getenv('A'))
           
           "
             
@@ -44,4 +47,4 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_LABELS: ${{ toJson(github.event.issue.labels.*.name) }}
           CLICKUP_ASSIGNESS_LIST: ${{ vars.CLICKUP_ASSIGNESS_LIST }}
-          A: ${{ toJson(github.event.issue) }}
+          # A: ${{ toJson(github.event.issue) }}
