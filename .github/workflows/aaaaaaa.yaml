@@ -59,17 +59,6 @@ jobs:
             clickup_comment_url = 'https://api.clickup.com/api/v2/task/%s/comment' % task_id
 
             clickup_comment_data = {
-              ' ': '',
-              'assignee': os.getenv('CLICKUP_ASSIGNESS_LIST'),
-              'notify_all': true,
-              'type': 'bookmark',
-              'bookmark': {
-                  'url': issue['html_url'],
-                  'service': 'github'
-              }
-            }
-
-            clickup_comment_data = {
               'comment': [
                   {
                       'type': 'bookmark',
