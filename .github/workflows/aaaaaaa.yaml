@@ -25,7 +25,7 @@ jobs:
             'name': f'{os.getenv('ISSUE_TITLE')} #{os.getenv('ISSUE_NUMBER')}',
             'markdown_description': os.getenv('ISSUE_BODY'),
             'tags': [ tag for tag in tags if tag not in priority ],
-            'priority' = 1 if 'urgent' in tags else 2 if 'high' in tags else 3 if 'normal' in tags else 4,
+            'priority': 1 if 'urgent' in tags else 2 if 'high' in tags else 3 if 'normal' in tags else 4,
             'status': 'Open',
             'notify_all': True,
             'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
