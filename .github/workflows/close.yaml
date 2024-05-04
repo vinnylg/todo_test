@@ -49,32 +49,33 @@ jobs:
 
             if re_task_id:
               task_id = re_task_id.group(1)
-              print(task_id)
             else:
               print('Not has ClickUp Task')
+              exit(0)
             
           else:
-            print('not has comments')
+            print('Not has comments')
+            exit(0)
 
           ## UPDATE TASK
 
-          # clickup_task_url = 'https://api.clickup.com/api/v2/task/%s' % task_id
+          clickup_task_url = 'https://api.clickup.com/api/v2/task/%s' % task_id
 
-          # clickup_headers = {
-          #     'Content-Type': 'application/json',
-          #     'Authorization': os.getenv('CLICKUP_TOKEN')
-          # }
+          clickup_headers = {
+              'Content-Type': 'application/json',
+              'Authorization': os.getenv('CLICKUP_TOKEN')
+          }
 
-          # task_data = {
-          #   'status': 'Closed'
-          # }
+          task_data = {
+            'status': 'Closed'
+          }
 
-          # task_response = requests.post(clickup_task_url, headers=clickup_headers, json=task_data)
+          task_response = requests.post(clickup_task_url, headers=clickup_headers, json=task_data)
 
-          # if sucess(task_response.status_code):
-          #   print('Task closed successfully!')
-          # else:
-          #   raise Exception('Error closing task in ClickUp:', task_response.text)
+          if sucess(task_response.status_code):
+            print('Task closed successfully!')
+          else:
+            raise Exception('Error closing task in ClickUp:', task_response.text)
           "
         env:
           ISSUE: ${{ toJson(github.event.issue) }}
