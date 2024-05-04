@@ -17,28 +17,11 @@ jobs:
           import json
           import os
 
-          tags = [ tag.lower() for tag in json.loads(os.getenv('ISSUE_LABELS'))]
-          priorities = [ 'urgent', 'high', 'normal', 'low' ]
+          issue = json.loads(os.getenv('ISSUE'))
 
-          get_priority = lambda tags: 1 if 'urgent' in tags else 2 if 'high' in tags else 3 if 'normal' in tags else 4
-
-          data = {
-            'list': os.getenv('CLICKUP_LIST_ID'),
-            'name': f'{os.getenv('ISSUE_TITLE')} #{os.getenv('ISSUE_NUMBER')}',
-            'markdown_description': os.getenv('ISSUE_BODY'),
-            'tags': [ tag for tag in tags if tag not in priorities ],
-            'priority': get_priority(tags),
-            'status': 'Open',
-            'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
-          }
-          
-          print(json.dumps(data, indent=2))          
+          print(issue)
           "
             
         env:
-          CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
-          ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
-          ISSUE_LABELS: ${{ toJson(github.event.issue.labels.*.name) }}
+          ISSUE: ${{ toJson(github.event.issue) }}
           CLICKUP_ASSIGNESS_LIST: ${{ vars.CLICKUP_ASSIGNESS_LIST }}
