@@ -54,7 +54,7 @@ jobs:
           else:
             raise Exception('Error creating task in ClickUp:', task_response.text)
           
-          response_json = task_response.json()
+          task_response_json = task_response.json()
           task_id = task_response_json['id']
           task_url = task_response_json['url']
           
