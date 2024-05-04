@@ -22,6 +22,8 @@ jobs:
 
           for tag in tags:
             print(tag)
+
+          print(1 if 'urgent' in tags else 2 if 'high' in tags else 3 if 'normal' in tags else 4)
           
           data = {
             'list': os.getenv('CLICKUP_LIST_ID'),
