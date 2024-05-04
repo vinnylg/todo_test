@@ -15,12 +15,12 @@ jobs:
         run: |
           echo '
           {
-            "list": "{{ vars.CLICKUP_LIST_ID }}",
+            "list": "${{ vars.CLICKUP_LIST_ID }}",
             "name": "${{ github.event.issue.title }} #${{ github.event.issue.number }}",
             "markdown_description": "${{ github.event.issue.body }}",
             "tags": "${{ toJson(github.event.issue.labels.*.name) }}",
             "status": "Open",
             "notify_all": true,
             "priority": 3,
-            "assignees": "{{ vars.CLICKUP_ASSIGNESS_LIST }}"
+            "assignees": "${{ vars.CLICKUP_ASSIGNESS_LIST }}"
           }'
