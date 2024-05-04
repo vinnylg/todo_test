@@ -18,7 +18,7 @@ jobs:
             \"list\": \"${{ vars.CLICKUP_LIST_ID }}\",
             \"name\": \"${{ github.event.issue.title }} #${{ github.event.issue.number }}\",
             \"markdown_description\": \"${{ github.event.issue.body }}\",
-            \"tags\": \"${{ toJson(github.event.issue.labels.*.name) }}\",
+            \"tags\": ${{ toJson(github.event.issue.labels.*.name) }},
             \"status\": \"Open\",
             \"notify_all\": true,
             \"priority\": 3,
