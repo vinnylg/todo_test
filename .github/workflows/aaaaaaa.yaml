@@ -11,16 +11,16 @@ jobs:
       - name: "Print issue details"
         run: |
           echo '${{ toJson(github.event.issue) }}'
-      - name: "Print custom JSON"
-        run: |
-          JSON_STRING='{
-            "list": "${{ vars.CLICKUP_LIST_ID }}",
-            "name": "${{ github.event.issue.title }} #${{ github.event.issue.number }}",
-            "markdown_description": "${{ github.event.issue.body }}",
-            "tags": "${{ toJson(github.event.issue.labels.*.name) }}",
-            "status": "Open",
-            "notify_all": true,
-            "priority": 3,
-            "assignees": "${{ vars.CLICKUP_ASSIGNESS_LIST }}"
-          }'
-          echo $JSON_STRING
+      # - name: "Print custom JSON"
+      #   run: |
+      #     JSON_STRING='{
+      #       "list": "${{ vars.CLICKUP_LIST_ID }}",
+      #       "name": "${{ github.event.issue.title }} #${{ github.event.issue.number }}",
+      #       "markdown_description": "${{ github.event.issue.body }}",
+      #       "tags": "${{ toJson(github.event.issue.labels.*.name) }}",
+      #       "status": "Open",
+      #       "notify_all": true,
+      #       "priority": 3,
+      #       "assignees": "${{ vars.CLICKUP_ASSIGNESS_LIST }}"
+      #     }'
+      #     echo $JSON_STRING
