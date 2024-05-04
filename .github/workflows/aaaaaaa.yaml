@@ -26,7 +26,7 @@ jobs:
             'list': os.getenv('CLICKUP_LIST_ID'),
             'name': f'{os.getenv('ISSUE_TITLE')} #{os.getenv('ISSUE_NUMBER')}',
             'markdown_description': os.getenv('ISSUE_BODY'),
-            'tags': [ tag for tag in tags if tag not in priority ],
+            'tags': [ tag for tag in tags if tag not in priorities ],
             'priority': get_priority(tags),
             'status': 'Open',
             'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
