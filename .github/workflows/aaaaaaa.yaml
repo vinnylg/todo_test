@@ -23,7 +23,7 @@ jobs:
 
           print('Creating Task in ClickUp from GitHub Issue #%d' % issue['number'])
 
-          clickup_task_url = f'https://api.clickup.com/api/v2/list/{os.getenv('CLICKUP_LIST_ID')}/task'
+          clickup_task_url = 'https://api.clickup.com/api/v2/list/%s/task' % os.getenv('CLICKUP_LIST_ID')
 
           clickup_headers = {
               'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ jobs:
 
             print('Task created successfully! ID:', task_id)
 
-            clickup_comment_url = f'https://api.clickup.com/api/v2/task/{task_id}/comment'
+            clickup_comment_url = 'https://api.clickup.com/api/v2/task/%s/comment' % task_id
 
             clickup_comment_data = {
               'type': 'bookmark',
