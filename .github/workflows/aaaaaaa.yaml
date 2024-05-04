@@ -41,7 +41,7 @@ jobs:
 
           tags = [label['name'].lower() for label in issue['labels']]
           filter_tags = [tag for tag in tags if tag not in priorities]
-          
+
           task_data = {
             'list': os.getenv('CLICKUP_LIST_ID'),
             'name': '#%d %s' % (issue['number'],issue['title']),
@@ -60,7 +60,7 @@ jobs:
             raise Exception('Error creating task in ClickUp:', task_response.text)
 
           ## CREATE COMMENT IN TASK
-          
+
           task_response_json = task_response.json()
           task_id = task_response_json['id']
           task_url = task_response_json['url']
@@ -97,13 +97,15 @@ jobs:
           issue_labels_update = {
             'labels': filter_tags + [ priorities[get_priority(tags) - 1] ]
           }
+          print(issue['url'])
+          print(issue_labels_update)
 
           issue_update_response = requests.put(issue['url'], headers=github_headers, json=issue_labels_update)
 
           if sucess(issue_update_response.status_code):
             print('Update Issue %d successfully!')
           else:
-            raise Exception('Failed to post comment:', issue_update_response.content)
+            raise Exception('Failed to change Issue:', issue_update_response.content)
 
 
           ## CREATE COMMENT IN ISSUE
