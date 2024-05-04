@@ -25,4 +25,4 @@ jobs:
             \"assignees\": \"${{ vars.CLICKUP_ASSIGNESS_LIST }}\"
           }"
 
-          echo $JSON_STRING
+          echo $JSON_STRING | jq
