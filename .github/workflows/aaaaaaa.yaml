@@ -9,12 +9,12 @@ jobs:
       - uses: "actions/checkout@v4"
       - name: "Print secrets and vars"
         run: |
-          echo "${{ secrets.CLICKUP_TOKEN }}"
-          echo "${{ env.CLICKUP_LIST_ID }}"
-          echo "${{ env.CLICKUP_ASSIGNESS_LIST }}"
+          echo '${{ secrets.CLICKUP_TOKEN }}'
+          echo '${{ vars.CLICKUP_LIST_ID }}'
+          echo '${{ vars.CLICKUP_ASSIGNESS_LIST }}'
       - name: "Print custom JSON"
         run: |
-          echo "{
+          JSON_STRING="{
             \"list\": \"${{ vars.CLICKUP_LIST_ID }}\",
             \"name\": \"${{ github.event.issue.title }} #${{ github.event.issue.number }}\",
             \"markdown_description\": \"${{ github.event.issue.body }}\",
@@ -24,3 +24,5 @@ jobs:
             \"priority\": 3,
             \"assignees\": \"${{ vars.CLICKUP_ASSIGNESS_LIST }}\"
           }"
+
+          echo $JSON_STRING
