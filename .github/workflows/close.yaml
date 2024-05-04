@@ -40,14 +40,21 @@ jobs:
             print('Get Issue Comments successfully')
           else:
             raise Exception('Failed to get comments:', issue_comment_response.content)
-
+          
+          
           comments = sorted(issue_comment_response.json(), key=lambda x: x['created_at'])
-          first_comment = comments[0]['body']
-          task_id = re.search(r'\[#(\w+)\]', first_comment)
-          print(task_id)
+          if len(comments):
+            first_comment = comments[0]['body']
+            re_task_id = re.search(r'\[#(\w+)\]', first_comment)
 
-          if not task_id:
-            print('not is a task id')
+            if re_task_id:
+              task_id = re_task_id.group(1)
+              print(task_id)
+            else:
+              print('Not has ClickUp Task')
+            
+          else:
+            print('not has comments')
 
           ## UPDATE TASK
 
