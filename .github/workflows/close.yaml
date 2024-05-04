@@ -1,0 +1,70 @@
+name: "Close ClickUp Task from Issue"
+on:
+  issues:
+    types: [closed]
+jobs:
+  meu_script:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v4"
+      - name: "Setup Python"
+        uses: "actions/setup-python@v2"
+        with:
+          python-version: "3.x"
+      - name: "Close Click Task"
+        run: |
+          pip install requests
+          python -c "
+          import requests
+          import json
+          import os
+
+          # lambdas
+          sucess = lambda code: 200 <= code < 300
+
+          issue = json.loads(os.getenv('ISSUE'))
+
+          print('Closing Task in ClickUp)
+
+          ## GET COMMENTS IN ISSUE
+
+          github_headers = {
+            'Authorization': 'token %s' % os.getenv('GITHUB_TOKEN'),
+            'Accept': 'application/vnd.github.v3+json'
+          }
+
+          issue_list_comment_response = requests.get(issue['comments_url'], headers=github_headers)
+
+          print(issue_list_comment_response.json())
+
+          if sucess(issue_comment_response.status_code):
+            print('Comment posted successfully in Issue')
+          else:
+            raise Exception('Failed to post comment:', issue_comment_response.content)
+
+
+          ## UPDATE TASK
+
+          # clickup_task_url = 'https://api.clickup.com/api/v2/task/%s' % task_id
+
+          # clickup_headers = {
+          #     'Content-Type': 'application/json',
+          #     'Authorization': os.getenv('CLICKUP_TOKEN')
+          # }
+
+          # task_data = {
+          #   'status': 'Closed'
+          # }
+
+          # task_response = requests.post(clickup_task_url, headers=clickup_headers, json=task_data)
+
+          # if sucess(task_response.status_code):
+          #   print('Task closed successfully!')
+          # else:
+          #   raise Exception('Error closing task in ClickUp:', task_response.text)
+
+          "
+        env:
+          ISSUE: ${{ toJson(github.event.issue) }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLICKUP_TOKEN: ${{ secrets.CLICKUP_TOKEN }}
