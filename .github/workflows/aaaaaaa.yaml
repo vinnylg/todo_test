@@ -13,6 +13,7 @@ jobs:
           python-version: "3.x"
       - name: "Create Click Task"
         run: |
+          pip install requests
           python -c "
           import requests
           import json
