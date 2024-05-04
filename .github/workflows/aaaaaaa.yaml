@@ -24,7 +24,6 @@ jobs:
             'tags': json.loads(os.getenv('ISSUE_LABELS')),
             'status': 'Open',
             'notify_all': True,
-            'priority': 3,
             'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
           }
 
@@ -32,8 +31,6 @@ jobs:
           data['priority'] = get_priority(data['tags'])
           
           print(json.dumps(data, indent=2))
-
-          print(os.getenv('ISSUE'))
           "
             
         env:
@@ -43,4 +40,3 @@ jobs:
           ISSUE_BODY: ${{ github.event.issue.body }}
           ISSUE_LABELS: ${{ toJson(github.event.issue.labels.*.name) }}
           CLICKUP_ASSIGNESS_LIST: ${{ vars.CLICKUP_ASSIGNESS_LIST }}
-          ISSUE: ${{ github.event.issue }}
