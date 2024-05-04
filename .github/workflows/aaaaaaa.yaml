@@ -19,7 +19,7 @@ jobs:
 
           issue = json.loads(os.getenv('ISSUE'))
 
-          print(json.dumbs(issue,indent=4))
+          print(json.dumps(issue,indent=4))
           "
             
         env:
