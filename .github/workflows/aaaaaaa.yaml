@@ -39,7 +39,7 @@ jobs:
 
           task_data = {
             'list': os.getenv('CLICKUP_LIST_ID'),
-            'name': '%s #%d' % (issue['title'],issue['number']),
+            'name': '#%d %s' % (issue['number'],issue['title']),
             'markdown_description': issue['body'],
             'tags': [tag for tag in tags if tag not in priorities],
             'priority': get_priority(tags),
@@ -59,12 +59,26 @@ jobs:
             clickup_comment_url = 'https://api.clickup.com/api/v2/task/%s/comment' % task_id
 
             clickup_comment_data = {
+              ' ': '',
+              'assignee': os.getenv('CLICKUP_ASSIGNESS_LIST'),
+              'notify_all': true,
               'type': 'bookmark',
               'bookmark': {
-                  'comment_text': '',
                   'url': issue['html_url'],
                   'service': 'github'
               }
+            }
+
+            clickup_comment_data = {
+              'comment': [
+                  {
+                      'type': 'bookmark',
+                      'bookmark': {
+                          'url': issue['html_url'],
+                          'service': 'github'
+                      }
+                  }
+              ]
             }
 
             response = requests.post(clickup_comment_url, headers=clickup_headers, json=clickup_comment_data)
