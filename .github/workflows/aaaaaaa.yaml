@@ -17,7 +17,7 @@ jobs:
           import json
           import os
 
-          tags = map(lambda x: x.lower(),json.loads(os.getenv('ISSUE_LABELS')))
+          tags = [ tag.lower() for tag in json.loads(os.getenv('ISSUE_LABELS'))]
           priorities = [ 'urgent', 'high', 'normal', 'low' ]
 
           get_priority = lambda tags: 1 if 'urgent' in tags else 2 if 'high' in tags else 3 if 'normal' in tags else 4
