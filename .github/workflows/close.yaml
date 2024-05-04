@@ -24,7 +24,7 @@ jobs:
 
           issue = json.loads(os.getenv('ISSUE'))
 
-          print('Closing Task in ClickUp)
+          print('Closing Task in ClickUp')
 
           ## GET COMMENTS IN ISSUE
 
