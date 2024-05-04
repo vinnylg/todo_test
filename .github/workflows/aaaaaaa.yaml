@@ -7,22 +7,33 @@ jobs:
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v4"
-      - name: "Print secrets and vars"
-        run: |
-          echo '${{ secrets.CLICKUP_TOKEN }}'
-          echo '${{ vars.CLICKUP_LIST_ID }}'
-          echo '${{ vars.CLICKUP_ASSIGNESS_LIST }}'
+      - name: "Setup Python"
+        uses: "actions/setup-python@v2"
+        with:
+          python-version: "3.x"
       - name: "Print custom JSON"
         run: |
-          JSON_STRING="{
-            \"list\": \"${{ vars.CLICKUP_LIST_ID }}\",
-            \"name\": \"${{ github.event.issue.title }} #${{ github.event.issue.number }}\",
-            \"markdown_description\": \"${{ github.event.issue.body }}\",
-            \"tags\": ${{ toJson(github.event.issue.labels.*.name) }},
-            \"status\": \"Open\",
-            \"notify_all\": true,
-            \"priority\": 3,
-            \"assignees\": \"${{ vars.CLICKUP_ASSIGNESS_LIST }}\"
-          }"
-
-          echo $JSON_STRING | jq
+          python -c "
+            import json
+            import os
+            
+            data = {
+              'list': os.getenv('CLICKUP_LIST_ID'),
+              'name': f'{os.getenv('ISSUE_TITLE')} #{os.getenv('ISSUE_NUMBER')}',
+              'markdown_description': os.getenv('ISSUE_BODY'),
+              'tags': json.loads(os.getenv('ISSUE_LABELS')),
+              'status': 'Open',
+              'notify_all': True,
+              'priority': 3,
+              'assignees': os.getenv('CLICKUP_ASSIGNESS_LIST')
+            }
+            
+            print(json.dumps(data, indent=2))"
+            
+        env:
+          CLICKUP_LIST_ID: ${{ vars.CLICKUP_LIST_ID }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_LABELS: ${{ toJson(github.event.issue.labels.*.name) }}
+          CLICKUP_ASSIGNESS_LIST: ${{ vars.CLICKUP_ASSIGNESS_LIST }}
