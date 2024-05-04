@@ -2,25 +2,25 @@ name: "Executar meu script"
 on:
   issues:
     types: [opened]
-
 jobs:
   meu_script:
     runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@v4"
-      - name: "Print issue details"
+      - name: "Print secrets and vars"
         run: |
           echo "${{ secrets.CLICKUP_TOKEN }}"
           echo "${{ vars.CLICKUP_LIST_ID }}"
           echo "${{ vars.CLICKUP_ASSIGNESS_LIST }}"
       - name: "Print custom JSON"
         run: |
-          echo '
-          {
-            "name": "${{ github.event.issue.title }} #${{ github.event.issue.number }}",
-            "markdown_description": "${{ github.event.issue.body }}",
-            "tags": "${{ toJson(github.event.issue.labels.*.name) }}",
-            "status": "Open",
-            "notify_all": true,
-            "priority": 3,
-          }'
+          echo "{
+            \"list\": \"${{ vars.CLICKUP_LIST_ID }}\",
+            \"name\": \"${{ github.event.issue.title }} #${{ github.event.issue.number }}\",
+            \"markdown_description\": \"${{ github.event.issue.body }}\",
+            \"tags\": \"${{ toJson(github.event.issue.labels.*.name) }}\",
+            \"status\": \"Open\",
+            \"notify_all\": true,
+            \"priority\": 3,
+            \"assignees\": \"${{ vars.CLICKUP_ASSIGNESS_LIST }}\"
+          }"
